@@ -63,6 +63,8 @@ app.group("/hotelky",(router) => {
     router.post('/rooms/add',roomController.add)
     router.put('/rooms/checkin/:roomId',roomController.roomCheckIn)
     router.put('/rooms/checkout/:roomId',roomController.roomCheckOut)
+    router.get('/rooms/detail/:roomId',roomController.detail)
+    router.put('/rooms/update/:roomId',roomController.update)
 
     // Orders API
     router.get('/orders',orderController.show)

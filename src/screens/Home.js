@@ -4,18 +4,17 @@ import {
   View,
   Text,
   AsyncStorage,
-  FlatList,
-  Alert,
   StyleSheet,
   Dimensions,
 } from 'react-native';
 import * as actionsRooms from '../redux/actions/actionsRooms';
-import {Icon} from 'native-base';
+import {Icon,Header,Body,Title} from 'native-base';
 import * as actionsOrders from '../redux/actions/actionsOrders';
 import {connect} from 'react-redux';
 import {TouchableOpacity} from 'react-native-gesture-handler';
 import CheckOut from '../components/CheckOut';
 import Modal from "react-native-modal";
+import { FlatGrid } from 'react-native-super-grid'
 
 class Home extends Component {
   constructor(props) {
@@ -54,11 +53,15 @@ class Home extends Component {
   checkIn = () => {
     alert('checkin')
   }
+  goUpdateRoom = (idRoom) =>{
+    this.props.navigation.navigate('UpdateRoom',idRoom)
+  }
 
   render() {
     const dataRooms = this.props.roomsData.rooms;
     return (
       <View>
+      
         <View style={styles.modalContainer}>
         <Modal isVisible={this.state.modalVisible}>
             <View style={styles.modalInside}>
@@ -68,14 +71,19 @@ class Home extends Component {
             </View>
           </Modal>
         </View>
-        <FlatList
-          data={dataRooms}
+        <FlatGrid
+          style={{marginRight:20}}
+          itemDimension={90}
+          items={dataRooms}
           renderItem={({item})=>
             <View>
               <TouchableOpacity
                 style={!item.available?styles.roomBooked:styles.roomAvailable}
-                onPress={()=>{!item.available?this.showRoom(true,item.id):this.checkIn(true,item.id)}}>
-                <Text>{item.name}</Text>
+                onPress={()=>{!item.available?this.showRoom(true,item.id):this.goUpdateRoom(item.id)}}>
+                <View style={{padding:10}}>
+                  <Text style={{color:'white',fontWeight:'bold'}}>{item.name}</Text>
+                  <Text style={{color:'white'}}>{!item.available?'Booked':'Available'}</Text>
+                </View>  
               </TouchableOpacity>
           </View>             
           }
@@ -91,11 +99,9 @@ class Home extends Component {
 const styles = StyleSheet.create({
   
   modalContainer: {
-    backgroundColor: '#FFFFFF50',
-    flex: 1,
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
+
+  
+    
   },
   modalInside: {
     alignSelf:'center',
@@ -113,16 +119,20 @@ const styles = StyleSheet.create({
     alignSelf:'flex-end'
   },
   roomBooked: {
-    alignItems:'center', 
-    backgroundColor:'grey',
+    borderRadius:10,
+   justifyContent:"flex-end",
+    backgroundColor:'#0097e6',
     margin:10,
     height:100,
+    width:100,
   },
   roomAvailable: {
-    alignItems: 'center', 
-    backgroundColor: 'green',
+    borderRadius:10,
+    justifyContent:"flex-end",
+    backgroundColor: '#4cd137',
     margin: 10,
-    height: 100}
+    height: 100,
+    width:100}
     
 })
 

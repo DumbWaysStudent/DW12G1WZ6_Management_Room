@@ -39,15 +39,13 @@ class Checkin extends Component {
       orderEndTime: dateCheckOut,
       duration: this.state.durationCheckin,
     }
-    this.props.checkInOrder(params)
-    this.props.checkInRoom(params)
+    await this.props.checkInOrder(params)
+    await this.props.checkInRoom(params)
     const token = await AsyncStorage.getItem('user-token')
     await this.props.getDataRooms(token)
-    this.props.navigation.navigate('Home')
+    alert('berhasil check in')
   }
   render() {
-   
-   
     return (
         <SafeAreaView>
         <View style={styles.container}>

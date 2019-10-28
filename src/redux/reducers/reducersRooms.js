@@ -13,6 +13,7 @@ const initialState = {
     addRooms : [],
     roomsCheckin: [],
     roomsCheckOut: [],
+    roomsDetail: [],
 };
 
 const  reducerGetRooms = (state=initialState,action) =>{
@@ -89,8 +90,44 @@ const  reducerGetRooms = (state=initialState,action) =>{
                             isAddError:true,
                             isAddLoading:false
                         }
-        default :
-            return state;
+                        case `${types.ROOMSUPDATE}_PENDING`:
+                            return{
+                                ...state,
+                                isAddLoading: true
+                            }
+                        case `${types.ROOMSUPDATE}_FULFILLED`:
+                            return{
+                                ...state,
+                                isAddLoading: false,
+                                isAddSuccess: true,
+                                roomsCheckOut: action.payload.data
+                            }
+                        case `${types.ROOMSUPDATE}_REJECTED`:
+                            return{
+                                ...state,
+                                isAddError:true,
+                                isAddLoading:false
+                            }
+                            case `${types.ROOMSDETAIL}_PENDING`:
+                                return{
+                                    ...state,
+                                    isAddLoading: true
+                                }
+                            case `${types.ROOMSDETAIL}_FULFILLED`:
+                                return{
+                                    ...state,
+                                    isAddLoading: false,
+                                    isAddSuccess: true,
+                                    roomsDetail: action.payload.data
+                                }
+                            case `${types.ROOMSDETAIL}_REJECTED`:
+                                return{
+                                    ...state,
+                                    isAddError:true,
+                                    isAddLoading:false
+                                }
+    default :
+        return state;
     }
 
   }

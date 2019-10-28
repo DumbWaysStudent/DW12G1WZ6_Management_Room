@@ -15,6 +15,30 @@ exports.add = async(req,res) =>{
     })
     res.send(result)
 }
+exports.update = async() =>{
+  const roomId = req.params.roomId
+  const data = req.body
+  const result = await rooms.update(
+    {
+      name : data.name
+    },
+    {
+      where: {
+        id:roomId
+      }
+    }
+  )
+  res.send(result)
+}
+exports.detail = async() =>{
+  const roomId = req.params.roomId
+  const result = await rooms.findOne({
+    where: {
+      id: roomId
+    }
+  })
+  res.send(result)
+}
 exports.roomCheckOut = async(req,res) =>{
   const roomId = req.params.roomId
   const result = await rooms.update(

@@ -11,6 +11,7 @@ import Customer from './src/screens/Customer'
 import Setting from './src/screens/Setting'
 import AddCustomer from './src/screens/AddCustomer'
 import UpdateCustomer from './src/screens/updateCustomer'
+import UpdateRoom from './src/screens/UpdateRoom'
 
 import {createBottomTabNavigator} from 'react-navigation-tabs';
 
@@ -90,6 +91,12 @@ const AppNavigator = createStackNavigator({
     },
     UpdateCustomer : {
       screen : UpdateCustomer,
+      navigationOptions:{
+        header:null
+      }
+    },
+    UpdateRoom : {
+      screen : UpdateRoom,
       navigationOptions:{
         header:null
       }

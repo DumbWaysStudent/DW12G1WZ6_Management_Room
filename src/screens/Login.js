@@ -51,6 +51,7 @@ class Login extends Component {
         <View style={styles.form}>
           <Item rounded style={styles.formItem}>
             <Input
+              style={{marginLeft:10}}
               value={this.state.inputUsername}
               onChangeText={(text) => this.setState({ inputUsername: text })}
               autoCapitalize='none'
@@ -59,6 +60,7 @@ class Login extends Component {
           </Item>
           <Item rounded style={styles.formItem}>
             <Input
+              style={{marginLeft:10}}
               value={this.state.inputPassword}
               onChangeText={(text) => this.setState({ inputPassword: text })}
               secureTextEntry={true}
@@ -68,8 +70,8 @@ class Login extends Component {
           {/* <Button
             title={"Let's Get Started"}
             onHandleButton={() => this.authentication()} /> */}
-          <TouchableOpacity style={{padding:10,backgroundColor:'blue'}} onPress={this.authentication}>
-            <Text>Login</Text>
+          <TouchableOpacity style={{padding:20,backgroundColor:'#1B9CFC',borderRadius:30}} onPress={this.authentication}>
+            <Text style={{alignSelf:'center',fontWeight:'bold', color:'white'}}>Login</Text>
           </TouchableOpacity>
         </View>
 

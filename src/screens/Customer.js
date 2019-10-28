@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { View, Text,AsyncStorage,FlatList,TouchableOpacity,StyleSheet } from 'react-native';
+import { View, Text,AsyncStorage,FlatList,TouchableOpacity,StyleSheet,Image } from 'react-native';
 import * as actionsCustomers from '../redux/actions/actionCustomer'
 import { Header, Left, Body, Right, Icon, CardItem,Card } from 'native-base';
 import {connect} from 'react-redux'
@@ -28,24 +28,34 @@ class Customer extends Component {
   render() {
    
     return (
-      <View style={{padding:10,flex:1}}>
+      <View style={{flex:1}}>
       <FlatList
+        style={{margin:10}}
         data={this.props.customersData.customers}
         renderItem={({item})=>
         <TouchableOpacity
         onPress={()=>this.gotoUpdateCustomer(item.id)} 
-        style={{marginBottom:5,borderColor:'grey',borderWidth: 1}}>
+        style={styles.cardCustomer}>
+  
         <View style={{flexDirection: 'row'}}>
-          <Text>Name : </Text>    
-          <Text>{item.name}</Text>
-        </View>  
-        <View style={{flexDirection: 'row', }}>
-          <Text>Card ID : </Text>    
-          <Text>{item.id_card}</Text>
-        </View> 
-          <View style={{flexDirection: 'row'}}>
-          <Text>Phone Number : </Text>    
-          <Text>{item.phone_number}</Text>
+        <Image
+          style={{width: 50, height: 50,marginRight:10}}
+          source={require('./../assets/defaultUser.png')}
+        />
+          <View>
+            <View style={{flexDirection: 'row'}}>
+              <Text>Name : </Text>    
+              <Text>{item.name}</Text>
+            </View>  
+            <View style={{flexDirection: 'row', }}>
+              <Text>Card ID : </Text>    
+              <Text>{item.id_card}</Text>
+            </View> 
+              <View style={{flexDirection: 'row'}}>
+              <Text>Phone Number : </Text>    
+              <Text>{item.phone_number}</Text>
+            </View>
+          </View>
         </View>
         </TouchableOpacity>  
         }
@@ -79,8 +89,13 @@ const styles = StyleSheet.create({
     margin:20,
     alignSelf:'flex-end'
   },
-
-  
+  cardCustomer: {
+    borderRadius :10,
+    marginBottom:5,
+    padding:20,
+    borderColor:'#dcdde1',
+    borderWidth: 1
+  }
 })
 
 export default connect(
