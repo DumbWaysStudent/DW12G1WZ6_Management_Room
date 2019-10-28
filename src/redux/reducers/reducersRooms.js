@@ -10,7 +10,9 @@ const initialState = {
     isAddSuccess : false,
 
     rooms: [],
-    addRooms : []
+    addRooms : [],
+    roomsCheckin: [],
+    roomsCheckOut: [],
 };
 
 const  reducerGetRooms = (state=initialState,action) =>{
@@ -51,6 +53,42 @@ const  reducerGetRooms = (state=initialState,action) =>{
                     isAddError:true,
                     isAddLoading:false
                 }
+                case `${types.ROOMSCHECKIN}_PENDING`:
+                    return{
+                        ...state,
+                        isAddLoading: true
+                    }
+                case `${types.ROOMSCHECKIN}_FULFILLED`:
+                    return{
+                        ...state,
+                        isAddLoading: false,
+                        isAddSuccess: true,
+                        roomsCheckin: action.payload.data
+                    }
+                case `${types.ROOMSCHECKIN}_REJECTED`:
+                    return{
+                        ...state,
+                        isAddError:true,
+                        isAddLoading:false
+                    }
+                    case `${types.ROOMSCHECKOUT}_PENDING`:
+                        return{
+                            ...state,
+                            isAddLoading: true
+                        }
+                    case `${types.ROOMSCHECKOUT}_FULFILLED`:
+                        return{
+                            ...state,
+                            isAddLoading: false,
+                            isAddSuccess: true,
+                            roomsCheckOut: action.payload.data
+                        }
+                    case `${types.ROOMSCHECKOUT}_REJECTED`:
+                        return{
+                            ...state,
+                            isAddError:true,
+                            isAddLoading:false
+                        }
         default :
             return state;
     }

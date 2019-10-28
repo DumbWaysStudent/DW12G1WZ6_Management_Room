@@ -1,105 +1,131 @@
-import React, { Component } from 'react';
-import { View, Text, AsyncStorage,FlatList,Modal,TouchableHighlight,Alert,StyleSheet, } from 'react-native';
-import * as actionsRooms from '../redux/actions/actionsRooms'
-import { Header, Left, Body, Right, Icon, CardItem,Card } from 'native-base';
-import * as actionsOrders from '../redux/actions/actionsOrders'
-import {connect} from 'react-redux'
-import { TouchableOpacity } from 'react-native-gesture-handler';
-import CheckOut from '../components/CheckOut'
+/* eslint-disable react-native/no-inline-styles */
+import React, {Component} from 'react';
+import {
+  View,
+  Text,
+  AsyncStorage,
+  FlatList,
+  Alert,
+  StyleSheet,
+  Dimensions,
+} from 'react-native';
+import * as actionsRooms from '../redux/actions/actionsRooms';
+import {Icon} from 'native-base';
+import * as actionsOrders from '../redux/actions/actionsOrders';
+import {connect} from 'react-redux';
+import {TouchableOpacity} from 'react-native-gesture-handler';
+import CheckOut from '../components/CheckOut';
+import Modal from "react-native-modal";
 
 class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      roomDetail :[],
-      modalVisible : false
+      roomDetail: [],
+      modalVisible: false,
+      orders: ''
     };
   }
 
-  componentDidMount= async() =>{
-    const token = await AsyncStorage.getItem('user-token')
-    await this.props.getDataRooms(token)
-    const dataRooms = this.props.roomsData.rooms
-    console.log(dataRooms)
-  }
+  componentDidMount = async () => {
+    const token = await AsyncStorage.getItem('user-token');
+    await this.props.getDataRooms(token);
+  };
 
-  goAddRoom = async () =>{
-    this.props.navigation.navigate('AddRoom')
-  }
+  goAddRoom = async () => {
+    this.props.navigation.navigate('AddRoom');
+  };
 
-  // showRoom = async(visible,idRoom) =>{
-  //   const token = await AsyncStorage.getItem('user-token')
-  //   await this.props.getDataOrders(token,idRoom)
-  //   const dataOrders = this.props.ordersData.orders
-  //   console.log(dataOrders.customers.name)
-  //   this.setState({
-  //     roomDetail : dataOrders.customers.name
-  //   })
-  //   this.setState({modalVisible: visible});
-  // }
-  // closeModal = (visible) =>{
-  //   this.setState({modalVisible: visible});
-  // }
+  showRoom = async (visible, idRoom) => {
+    const token = await AsyncStorage.getItem('user-token');
+    await this.props.getDataOrders(token, idRoom);
+    const dataOrders = await this.props.ordersData.orders;
+    this.setState({
+      roomDetail: dataOrders.customers.name,
+      orders:dataOrders
+    });
+
+    this.setState({modalVisible: visible, idRoom: idRoom});
+  };
+
+  closeModal = () => {
+    this.setState({modalVisible: false});
+  };
+  checkIn = () => {
+    alert('checkin')
+  }
 
   render() {
-    const dataRooms = this.props.roomsData.rooms
+    const dataRooms = this.props.roomsData.rooms;
     return (
-      <View style={{padding:10,flex:1}}>
-        {/* <Modal
-          animationType="slide"
-          transparent={false}
-          visible={this.state.modalVisible}
-          onRequestClose={() => {
-            Alert.alert('Modal has been closed.');
-          }}>
-          <View style={{marginTop: 22}}>
-            <View>
-              <CheckOut></CheckOut>
-              <TouchableHighlight
-                onPress={() => {
-                  this.showRoom(false,'');
-                }}>
-                <Text>Hide Modal</Text>
-              </TouchableHighlight>
+      <View>
+        <View style={styles.modalContainer}>
+        <Modal isVisible={this.state.modalVisible}>
+            <View style={styles.modalInside}>
+              <CheckOut 
+              closeModal={()=>this.setState({modalVisible:false})}
+              id={this.state.orders}></CheckOut>
             </View>
-          </View>
-        </Modal> */}
-
+          </Modal>
+        </View>
         <FlatList
           data={dataRooms}
-          renderItem={({item})=>{     
-            <Text>{item.name}</Text>
-            {if(!item.available){
-              return(  <View>
-                <TouchableOpacity 
-                style={{alignItems:'center', backgroundColor:'grey',margin:10,height:100}}
-                onPress={()=>{this.showRoom(true,item.id)}}>
-                  <Text>{item.name}</Text>
-               </TouchableOpacity>
-               </View>)
-            
-            }
-            else{
-             return (
-              <View>
-              <TouchableOpacity 
-              style={{alignItems:'center', backgroundColor:'green',margin:10,height:100}}
-              onPress={()=>{this.showRoom(true,item.id)}}>
+          renderItem={({item})=>
+            <View>
+              <TouchableOpacity
+                style={!item.available?styles.roomBooked:styles.roomAvailable}
+                onPress={()=>{!item.available?this.showRoom(true,item.id):this.checkIn(true,item.id)}}>
                 <Text>{item.name}</Text>
-             </TouchableOpacity>
-             </View>)
-            }}   
-          }
+              </TouchableOpacity>
+          </View>             
           }
         />
          <TouchableOpacity style={styles.buttonAdd}
            onPress={this.goAddRoom}>
          <Icon name='add' style={{color:'white',padding:10}}></Icon>
-       </TouchableOpacity>
+       </TouchableOpacity>   
       </View>
     );
   }
 }
+const styles = StyleSheet.create({
+  
+  modalContainer: {
+    backgroundColor: '#FFFFFF50',
+    flex: 1,
+    flexDirection: 'column',
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalInside: {
+    alignSelf:'center',
+    justifyContent: "center",
+    backgroundColor:'white',
+    width: Dimensions.get('window').width*0.85,
+    height: Dimensions.get('window').height*0.8,
+  },
+  buttonAdd: {
+    borderRadius:30,
+    alignItems: 'center',
+    width:50,
+    backgroundColor:'orange',
+    margin:20,
+    alignSelf:'flex-end'
+  },
+  roomBooked: {
+    alignItems:'center', 
+    backgroundColor:'grey',
+    margin:10,
+    height:100,
+  },
+  roomAvailable: {
+    alignItems: 'center', 
+    backgroundColor: 'green',
+    margin: 10,
+    height: 100}
+    
+})
+
 const mapStateToProps = state => {
   return {
     roomsData : state.rooms, // reducers/index.js
@@ -116,15 +142,3 @@ export default connect(
   mapStateToProps,
   mapDispatchToProps
 )(Home);
-const styles = StyleSheet.create({
-  buttonAdd:{
-    borderRadius:30,
-    alignItems: 'center',
-    width:50,
-    backgroundColor:'orange',
-    margin:20,
-    alignSelf:'flex-end'
-  },
-
-  
-})

@@ -34,9 +34,7 @@ import {connect} from 'react-redux'
     await this.props.updateDataCustomer(params)
     const token = await AsyncStorage.getItem('user-token')
     const param = this.props.navigation.state.params
-    console.log(param)
     await this.props.getDataCustomer(param,token)
-    console.log(this.props.customerData)
     this.props.navigation.navigate('Customer')
   }
 

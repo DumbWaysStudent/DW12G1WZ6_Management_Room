@@ -61,11 +61,14 @@ app.group("/hotelky",(router) => {
     // Rooms Api
     router.get('/rooms',roomController.show)
     router.post('/rooms/add',roomController.add)
+    router.put('/rooms/checkin/:roomId',roomController.roomCheckIn)
+    router.put('/rooms/checkout/:roomId',roomController.roomCheckOut)
 
     // Orders API
     router.get('/orders',orderController.show)
     router.get('/orders/check/:roomId',orderController.checkRoom)
-    
+    router.put('/orders/checkout/:idOrder',orderController.orderCheckOut)
+    router.post('/orders/checkIn',orderController.orderCheckIn)
 })
 
 app.listen(port, () => console.log(`Listening on port ${port}!`))

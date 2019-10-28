@@ -1,60 +1,85 @@
 import React, { Component } from 'react';
-import { View, Text,StyleSheet,SafeAreaView,Image,TouchableOpacity,Dimensions,AsyncStorage } from 'react-native';
+import { View, Text,StyleSheet,SafeAreaView,Image,TouchableOpacity,Dimensions,AsyncStorage,Picker } from 'react-native';
 import { 
-  Card,
-  
-    Icon,
-    Form, 
     Item, 
     Input,
-    CardItem,
-    Body,
     Label,
    } from 'native-base';
-
-export default class Checkin extends Component {
+import * as actionsOrders from '../redux/actions/actionsOrders';
+import * as actionsRooms from '../redux/actions/actionsRooms';
+import {Dropdown} from 'react-native-material-dropdown'
+import {connect} from 'react-redux'
+import * as actionsCustomers from '../redux/actions/actionCustomer'
+class Checkin extends Component {
     constructor(props) {
         super(props);
         this.state = {
-          inputUsername : '',
-          inputPassword : null,
-          showPassword : false
+          durationCheckin:'',
+          selectedValue : '',
+          selectedRoom : ''
         };
       }
+  componentDidMount = async() =>{
+    const token = await AsyncStorage.getItem('user-token')
+    await this.props.getCustomer(token)
+    await this.props.getDataRooms(token)
+    this.setState({
+      selectedValue: this.props.customersData.customers[0].id,
+      selectedRoom: this.props.roomsData.rooms[0].id,
+    })
+  }
 
+  checkIn = async() =>{
+    const dateNow = new Date()
+    let dateCheckOut = new Date(dateNow)
+    dateCheckOut.setMinutes(dateNow.getMinutes()+this.state.durationCheckin)
+    const params = {
+      customerId: this.state.selectedValue,
+      roomId: this.state.selectedRoom,
+      orderEndTime: dateCheckOut,
+      duration: this.state.durationCheckin,
+    }
+    this.props.checkInOrder(params)
+    this.props.checkInRoom(params)
+    const token = await AsyncStorage.getItem('user-token')
+    await this.props.getDataRooms(token)
+    this.props.navigation.navigate('Home')
+  }
   render() {
+   
+   
     return (
         <SafeAreaView>
         <View style={styles.container}>
           <View style={styles.form}>
-          <Label>Room Name</Label>
-            <Item style={styles.formItem}>
-              <Input
-                value={this.state.roomDetail}
-                onChangeText={(text) => this.setState({ inputUsername: text })}
-                autoCapitalize='none'
-                keyboardType='email-address'
-               />
-            </Item>
-            <Label>Customer</Label>
-            <Item  style={styles.formItem}>
-              <Input
-                value={this.state.inputPassword}
-                onChangeText={(text) => this.setState({ inputPassword: text })}
-                secureTextEntry={true}
-                keyboardType='default'
-                placeholder='Input your password' />
-            </Item>
+          <Label>Customer</Label>
+            <Picker
+                selectedValue={this.state.selectedValue}
+                onValueChange={ (text) => ( this.setState({selectedValue:text}) ) } >
+                { 
+                  this.props.customersData.customers.map((item)=>{
+                     return <Picker.Item key={item.id} value={item.id} label={item.name} />
+                  }
+                )}
+            </Picker>
+            <Label>Room Name</Label>
+            <Picker
+                selectedValue={this.state.selectedRoom}
+                onValueChange={ (text) => ( this.setState({selectedRoom:text}) ) } >
+                { 
+                  this.props.roomsData.rooms.map((item)=>{
+                     return <Picker.Item key={item.id} value={item.id} label={item.name} />
+                  }
+                )}
+            </Picker>
             <Label>Duration</Label>
             <Item style={styles.formItem}>
               <Input
-                value={this.state.inputPassword}
-                onChangeText={(text) => this.setState({ inputPassword: text })}
-                secureTextEntry={true}
+                onChangeText={(text) => this.setState({ durationCheckin: text })}
                 keyboardType='default'
-                placeholder='Input your password' />
+                placeholder='Duration Checkin' />
             </Item>
-            <TouchableOpacity style={{padding:10,backgroundColor:'blue'}} onPress={this.authentication}>
+            <TouchableOpacity style={{padding:10,backgroundColor:'blue'}} onPress={this.checkIn}>
               <Text>Submit</Text>
             </TouchableOpacity>
           </View>
@@ -92,3 +117,21 @@ const styles = StyleSheet.create({
       color: 'blue'
     }
   });
+  const mapStateToProps = state => {
+    return {
+      roomsData : state.rooms,
+      customersData : state.customers, // reducers/index.js
+    }
+  }
+  const mapDispatchToProps = dispatch => {
+    return {
+      checkInOrder: (params) =>dispatch(actionsOrders.checkInOrder(params)),
+      checkInRoom: (params) =>dispatch(actionsRooms.checkInRoom(params)),
+      getDataRooms: (token) => dispatch(actionsRooms.getRooms(token)),
+      getCustomer: (token) => dispatch(actionsCustomers.getCustomer(token)),
+    }
+  }
+  export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(Checkin);

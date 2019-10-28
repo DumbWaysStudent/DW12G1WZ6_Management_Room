@@ -15,3 +15,30 @@ exports.add = async(req,res) =>{
     })
     res.send(result)
 }
+exports.roomCheckOut = async(req,res) =>{
+  const roomId = req.params.roomId
+  const result = await rooms.update(
+    {
+      available: true
+    },
+    {
+      where: {
+        id: roomId
+      }
+    })
+  res.send(result)
+}
+exports.roomCheckIn = async(req,res) =>{
+  const roomId = req.params.roomId
+  const result = await rooms.update(
+    {
+      available: false
+    },
+    {
+      where: {
+        id: roomId
+      }
+    })
+  res.send(result)
+}
+ 

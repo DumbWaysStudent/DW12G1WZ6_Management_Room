@@ -14,3 +14,15 @@ export const addRooms = (params) =>({
         available : true
     })
 })
+export const checkInRoom = (params) =>({
+    type: types.ROOMSCHECKIN,
+    payload: axios.put(`http://192.168.73.2:5000/hotelky/rooms/checkin/${params.roomId}`,{
+        available: false
+    })
+})
+export const checkOutRoom = (params) =>({
+    type: types.ROOMSCHECKOUT,
+    payload: axios.put(`http://192.168.73.2:5000/hotelky/rooms/checkout/${params.idRoom}`,{
+        available: true
+    })
+})

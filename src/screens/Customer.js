@@ -9,12 +9,12 @@ class Customer extends Component {
     this.state = {
       name:'',
       cardId:'',
-      phoneNumber:''
+      phoneNumber:'',
+      
     };
   }
   gotoUpdateCustomer = (idCustomer) =>{
     this.props.navigation.navigate('UpdateCustomer',idCustomer)
-    console.log(idCustomer)
   }
   goAddCustomer = ()=>{
     this.props.navigation.navigate('AddCustomer')
@@ -23,7 +23,6 @@ class Customer extends Component {
     const token = await AsyncStorage.getItem('user-token')
     await this.props.getCustomer(token)
     await this.props.customersData.customers
-    console.log(this.props.customersData.customers)
   }
 
   render() {
@@ -70,10 +69,7 @@ const mapDispatchToProps = dispatch => {
     getCustomer: (token) => dispatch(actionsCustomers.getCustomer(token)),
   }
 }
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(Customer);
+
 const styles = StyleSheet.create({
   buttonAdd:{
     borderRadius:30,
@@ -86,3 +82,8 @@ const styles = StyleSheet.create({
 
   
 })
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(Customer);

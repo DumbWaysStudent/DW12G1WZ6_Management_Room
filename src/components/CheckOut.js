@@ -1,18 +1,10 @@
 import React, { Component } from 'react';
 import { View, Text,StyleSheet,SafeAreaView,Image,TouchableOpacity,Dimensions,AsyncStorage } from 'react-native';
-import { 
-  Card,
-  
-    Icon,
-    Form, 
-    Item, 
-    Input,
-    CardItem,
-    Body,
-    Label,
-   } from 'native-base';
-
-export default class CheckOut extends Component {
+import { Item, Input,} from 'native-base';
+import {connect} from 'react-redux';
+import * as actionsOrders from '../redux/actions/actionsOrders';
+import * as actionsRooms from '../redux/actions/actionsRooms';
+class CheckOut extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -21,54 +13,62 @@ export default class CheckOut extends Component {
           showPassword : false
         };
       }
-
+  checkOut = async()=>{
+    const token = await AsyncStorage.getItem('user-token');
+    const params = {
+      idOrder : this.props.id.id,
+      idRoom : this.props.id.rooms.id
+    };
+    await this.props.roomCheckOut(params);
+    await this.props.orderCheckOut(params);
+    await this.props.getDataRooms(token);
+    this.props.closeModal()
+  }
   render() {
+    const dataOrder = this.props.id;
     return (
-        <SafeAreaView>
-        <View style={styles.container}>
+      <View>
+      <View style={styles.container}>
           <View style={styles.form}>
-          <Label>Room Name</Label>
-            <Item style={styles.formItem}>
-              <Input
-                value={this.state.roomDetail}
-                onChangeText={(text) => this.setState({ inputUsername: text })}
-                autoCapitalize='none'
-                keyboardType='email-address'
-               />
-            </Item>
-            <Label>Customer</Label>
-            <Item  style={styles.formItem}>
-              <Input
-                value={this.state.inputPassword}
-                onChangeText={(text) => this.setState({ inputPassword: text })}
-                secureTextEntry={true}
-                keyboardType='default'
-                placeholder='Input your password' />
-            </Item>
-            <Label>Duration</Label>
-            <Item style={styles.formItem}>
-              <Input
-                value={this.state.inputPassword}
-                onChangeText={(text) => this.setState({ inputPassword: text })}
-                secureTextEntry={true}
-                keyboardType='default'
-                placeholder='Input your password' />
-            </Item>
-            <TouchableOpacity style={{padding:10,backgroundColor:'blue'}} onPress={this.authentication}>
-              <Text>Submit</Text>
-            </TouchableOpacity>
-          </View>
+          <Item rounded style={styles.formItem}>
+            <Input
+              style={styles.input}
+              value={dataOrder.customers.name}
+              onChangeText={(text) => this.setState({ inputUsername: text })}
+              autoCapitalize='none'
+              keyboardType='email-address'
+              placeholder='Input your email' />
+          </Item>
+          <Item rounded style={styles.formItem}>
+            <Input
+              style={styles.input}
+              value={dataOrder.rooms.name}
+              onChangeText={(text) => this.setState({ inputPassword: text })}
+              keyboardType='default'
+              placeholder='Input your password' />
+          </Item>
+          <Item rounded style={styles.formItem}>
+            <Input
+              style={styles.input}
+              value={dataOrder.order_end_time}
+              onChangeText={(text) => this.setState({ inputPassword: text })}
+              keyboardType='default'
+              placeholder='Input your password' />
+          </Item>
         </View>
-      </SafeAreaView >
+      </View>
+      <TouchableOpacity style={styles.button} onPress={this.checkOut}>
+        <Text>Check Out</Text>
+      </TouchableOpacity>
+      </View>
     );
   }
 }
 
 const styles = StyleSheet.create({
     container: {
-      // flex: 1,
-      width: Dimensions.get('window').width,
-      paddingHorizontal: 20
+      width: Dimensions.get('window').width*0.8,
+      
     },
     textInfo: {
       alignItems: 'center',
@@ -86,9 +86,40 @@ const styles = StyleSheet.create({
       marginTop: 10
     },
     formItem: {
-      marginBottom: 20
+      marginBottom: 20,
+      alignSelf:'center'
     },
     txtLink: {
       color: 'blue'
+    },
+    form: {
+      padding:5,
+      justifyContent: 'center'
+    },
+    input: {
+      padding:5,
+      justifyContent: 'center'
+    },
+    button: {
+      padding:10,
+      backgroundColor:'blue', 
+      width: Dimensions.get('window').width*0.6, 
+      alignSelf: 'center',
     }
   });
+  const mapStateToProps = state => {
+    return {
+
+    }
+  }
+  const mapDispatchToProps = dispatch => {
+    return {
+      getDataRooms: (token) => dispatch(actionsRooms.getRooms(token)),
+      roomCheckOut: (params) => dispatch(actionsRooms.checkOutRoom(params)),
+      orderCheckOut: (params) => dispatch(actionsOrders.checkOutOrder(params))
+    }
+  }
+  export default connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(CheckOut);

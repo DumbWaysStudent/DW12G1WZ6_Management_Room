@@ -4,7 +4,9 @@ const initialState = {
     isLoading: false,
     isError: false,
     isSuccess: false,
-    orders: []
+    orders: [],
+    orderCheckOut: [],
+    orderCheckIn: [],
 };
 
 export default  reducerOrders = (state=initialState,action) =>{
@@ -27,7 +29,44 @@ export default  reducerOrders = (state=initialState,action) =>{
                 isError:true,
                 isLoading:false
             }
+        case `${types.ORDERCHECKOUT}_PENDING`:
+            return{
+                ...state,
+                isLoading: true
+            }
+        case `${types.ORDERCHECKOUT}_FULFILLED`:
+            return{
+                ...state,
+                    isLoading: false,
+                    isSuccess: true,
+                    orderCheckOut: action.payload.data
+                }
+        case `${types.ORDERCHECKOUT}_REJECTED`:
+            return{
+                ...state,
+                isError:true,
+                isLoading:false
+            }
+            case `${types.ORDERCHECKIN}_PENDING`:
+                return{
+                    ...state,
+                    isLoading: true
+                }
+            case `${types.ORDERCHECKIN}_FULFILLED`:
+                return{
+                    ...state,
+                        isLoading: false,
+                        isSuccess: true,
+                        orderCheckOut: action.payload.data
+                    }
+            case `${types.ORDERCHECKIN}_REJECTED`:
+                return{
+                    ...state,
+                    isError:true,
+                    isLoading:false
+                }
         default :
             return state;
+    
     }
   }

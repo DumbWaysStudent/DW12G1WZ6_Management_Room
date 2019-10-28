@@ -7,6 +7,7 @@ export const getCustomer = (token) => ({
         headers : {"Authorization" : `Bearer ${token}`}
     })
 })
+
 export const addCustomer = (params) =>({
     type : types.ADDCUSTOMER,
     payload : axios.post(`http://192.168.73.2:5000/hotelky/customers/add`,{
@@ -15,7 +16,7 @@ export const addCustomer = (params) =>({
         phone_number : params.phoneNumber
     })
 })
-//berubah
+
 export const detailCustomer = (params,token) =>({
     type : types.DETAILCUSTOMER,
     payload : axios.get(`http://192.168.73.2:5000/hotelky/customers/detail/${params}`,{
