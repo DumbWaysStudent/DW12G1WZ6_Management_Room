@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text,StyleSheet,SafeAreaView,Image,TouchableOpacity,Dimensions,AsyncStorage } from 'react-native';
-import { Item, Input,} from 'native-base';
+import { Item, Input,Label,Header,Body,Title} from 'native-base';
 import {connect} from 'react-redux';
 import * as actionsOrders from '../redux/actions/actionsOrders';
 import * as actionsRooms from '../redux/actions/actionsRooms';
@@ -28,9 +28,14 @@ class CheckOut extends Component {
     const dataOrder = this.props.id;
     return (
       <View>
+          
+        <View style={styles.modal}>
+      
       <View style={styles.container}>
+        
           <View style={styles.form}>
-          <Item rounded style={styles.formItem}>
+            <Label>Customer Name</Label>
+          <Item regular style={styles.formItem}>
             <Input
               style={styles.input}
               value={dataOrder.customers.name}
@@ -39,7 +44,8 @@ class CheckOut extends Component {
               keyboardType='email-address'
               placeholder='Input your email' />
           </Item>
-          <Item rounded style={styles.formItem}>
+          <Label>Room Name</Label>
+          <Item regular style={styles.formItem}>
             <Input
               style={styles.input}
               value={dataOrder.rooms.name}
@@ -47,7 +53,8 @@ class CheckOut extends Component {
               keyboardType='default'
               placeholder='Input your password' />
           </Item>
-          <Item rounded style={styles.formItem}>
+          <Label>Date Check In</Label>
+          <Item regular style={styles.formItem}>
             <Input
               style={styles.input}
               value={dataOrder.order_end_time}
@@ -57,22 +64,35 @@ class CheckOut extends Component {
           </Item>
         </View>
       </View>
-      <TouchableOpacity style={styles.button} onPress={this.checkOut}>
-        <Text>Check Out</Text>
-      </TouchableOpacity>
+      <View style={{flexDirection:'row', justifyContent: 'center'}}>
+        <TouchableOpacity style={styles.buttonCheckout} onPress={this.checkOut}>
+          <Text>Check Out</Text>
+        </TouchableOpacity>
+        <TouchableOpacity style={styles.buttonCheckout} onPress={this.checkOut}>
+          <Text>Cancel</Text>
+        </TouchableOpacity>
       </View>
+      
+      </View>
+      </View>
+      
     );
   }
 }
 
 const styles = StyleSheet.create({
     container: {
-      width: Dimensions.get('window').width*0.8,
-      
+      alignSelf: 'center',
+      width: Dimensions.get('window').width*0.84,
+      borderRadius:15
+    },
+    modal: {
+      justifyContent: 'space-between',
+      borderRadius:5
     },
     textInfo: {
       alignItems: 'center',
-      padding: 20
+     
     },
     textInfoTop: {
       marginTop: 40,
@@ -86,24 +106,25 @@ const styles = StyleSheet.create({
       marginTop: 10
     },
     formItem: {
-      marginBottom: 20,
+      borderRadius:4,
+      marginBottom: 10,
       alignSelf:'center'
     },
     txtLink: {
       color: 'blue'
     },
     form: {
-      padding:5,
+     
       justifyContent: 'center'
     },
     input: {
       padding:5,
       justifyContent: 'center'
     },
-    button: {
+    buttonCheckout: {
       padding:10,
       backgroundColor:'blue', 
-      width: Dimensions.get('window').width*0.6, 
+      width: Dimensions.get('window').width*0.4, 
       alignSelf: 'center',
     }
   });

@@ -8,7 +8,7 @@ import {
   Dimensions,
 } from 'react-native';
 import * as actionsRooms from '../redux/actions/actionsRooms';
-import {Icon,Header,Body,Title} from 'native-base';
+import {Icon,Header,Body,Title,Left,Right,Fab,Button} from 'native-base';
 import * as actionsOrders from '../redux/actions/actionsOrders';
 import {connect} from 'react-redux';
 import {TouchableOpacity} from 'react-native-gesture-handler';
@@ -22,7 +22,8 @@ class Home extends Component {
     this.state = {
       roomDetail: [],
       modalVisible: false,
-      orders: ''
+      orders: '',
+      active: false
     };
   }
 
@@ -60,9 +61,15 @@ class Home extends Component {
   render() {
     const dataRooms = this.props.roomsData.rooms;
     return (
-      <View>
-      
-        <View style={styles.modalContainer}>
+      <View style={{flex:1}}>
+      <View >
+      <Header>
+          <Body>
+            <Title> Room Management</Title>
+          </Body>
+        </Header>
+        <View style={{backgroundColor:'blue'}}>
+          
         <Modal isVisible={this.state.modalVisible}>
             <View style={styles.modalInside}>
               <CheckOut 
@@ -72,7 +79,7 @@ class Home extends Component {
           </Modal>
         </View>
         <FlatGrid
-          style={{marginRight:20}}
+          style={{marginRight:20,marginBottom:120}}
           itemDimension={90}
           items={dataRooms}
           renderItem={({item})=>
@@ -88,10 +95,16 @@ class Home extends Component {
           </View>             
           }
         />
-         <TouchableOpacity style={styles.buttonAdd}
-           onPress={this.goAddRoom}>
-         <Icon name='add' style={{color:'white',padding:10}}></Icon>
-       </TouchableOpacity>   
+      </View>
+        <Fab
+        active={this.state.active}
+        direction="up"
+        containerStyle={{ }}
+        style={{ backgroundColor: '#5067FF' }}
+        position="bottomRight"
+        onPress={() => this.goAddRoom()}>
+        <Icon name="add" />
+      </Fab>
       </View>
     );
   }
@@ -100,14 +113,14 @@ const styles = StyleSheet.create({
   
   modalContainer: {
 
-  
     
   },
   modalInside: {
+    borderRadius: 5,
     alignSelf:'center',
     justifyContent: "center",
     backgroundColor:'white',
-    width: Dimensions.get('window').width*0.85,
+    width: Dimensions.get('window').width*0.95,
     height: Dimensions.get('window').height*0.8,
   },
   buttonAdd: {
