@@ -44,12 +44,15 @@ class Login extends Component {
       <View style={styles.container}>
 
         <View style={[styles.textInfo, styles.textInfoTop]}>
-          <Text style={styles.title}>HotelKy</Text>
-          <Text style={styles.subTitle}>SigIn with your account</Text>
+        <Image
+          style={{width: 100, height: 100}}
+          source={require('./../assets/icon/hotel.jpg')}
+        />
+          <Text style={styles.subTitle}>Room Management</Text>
         </View>
 
         <View style={styles.form}>
-          <Item rounded style={styles.formItem}>
+          <Item style={styles.formItem}>
             <Input
               style={{marginLeft:10}}
               value={this.state.inputUsername}
@@ -58,7 +61,7 @@ class Login extends Component {
               keyboardType='email-address'
               placeholder='Input your email' />
           </Item>
-          <Item rounded style={styles.formItem}>
+          <Item style={styles.formItem}>
             <Input
               style={{marginLeft:10}}
               value={this.state.inputPassword}
@@ -70,8 +73,8 @@ class Login extends Component {
           {/* <Button
             title={"Let's Get Started"}
             onHandleButton={() => this.authentication()} /> */}
-          <TouchableOpacity style={{padding:20,backgroundColor:'#1B9CFC',borderRadius:30}} onPress={this.authentication}>
-            <Text style={{alignSelf:'center',fontWeight:'bold', color:'white'}}>Login</Text>
+          <TouchableOpacity style={{padding:20,backgroundColor:'#1B9CFC',borderRadius:10}} onPress={this.authentication}>
+            <Text style={{alignSelf:'center',fontWeight:'bold', color:'white'}}>Let's Get Started</Text>
           </TouchableOpacity>
         </View>
 
@@ -111,12 +114,13 @@ const styles = StyleSheet.create({
   },
   textInfoTop: {
     marginTop: 40,
-    marginBottom: 60
+    marginBottom: 30
   },
   title: {
     fontSize: 50
   },
   subTitle: {
+    fontWeight:'bold',
     fontSize: 24,
     marginTop: 10
   },

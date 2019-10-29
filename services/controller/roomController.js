@@ -15,7 +15,7 @@ exports.add = async(req,res) =>{
     })
     res.send(result)
 }
-exports.update = async() =>{
+exports.update = async(req,res) =>{
   const roomId = req.params.roomId
   const data = req.body
   const result = await rooms.update(
@@ -30,7 +30,7 @@ exports.update = async() =>{
   )
   res.send(result)
 }
-exports.detail = async() =>{
+exports.detail = async(req,res) =>{
   const roomId = req.params.roomId
   const result = await rooms.findOne({
     where: {

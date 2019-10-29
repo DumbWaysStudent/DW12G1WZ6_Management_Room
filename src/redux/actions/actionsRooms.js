@@ -26,13 +26,13 @@ export const checkOutRoom = (params) =>({
         available: true
     })
 })
-export const updateRooms = (params) =>({
+export const updateRooms = (roomId,name) =>({
     types: types.ROOMSUPDATE,
-    payload: axios.put(`http://192.168.73.2:5000/hotelky/rooms/update/${params.roomId}`,{
-        name: params.name
+    payload: axios.put(`http://192.168.73.2:5000/hotelky/rooms/update/${roomId}`,{
+        name: name
     })
 })
 export const detailRooms = (params) =>({
     types: types.ROOMSDETAIL,
-    payload: axios.get(`http://192.168.73.2:5000/hotelky/rooms/detail/${params.roomId}`)
+    payload: axios.get(`http://192.168.73.2:5000/hotelky/rooms/detail/${params}`)
 })

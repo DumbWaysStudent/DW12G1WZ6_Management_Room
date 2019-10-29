@@ -16,23 +16,24 @@ import {connect} from 'react-redux'
       }
 
   updateDataRoomHandler= async()=>{
-    const params = {
-        idRoom: this.props.navigation.state.params,
-        name: this.state.room
-    }
-
-    await this.props.addDataRooms(this.state.room)
+    
+    const roomId= this.props.navigation.state.params
+    const name= this.state.room
+    
+    const token = await AsyncStorage.getItem('user-token')
+    await this.props.updateDataRooms(roomId,name)
     await this.props.getDataRooms(token)
-    console.log(this.props.roomsData)
-    this.props.navigation.navigate('Home')
+    await this.props.navigation.navigate('Home')
   }
   componentDidMount = async() =>{
-    const params = {
-        idRoom: this.props.navigation.state.params,
-        name: this.state.room
-    }
-
-    console.log(idRoom)
+    const idRoom = this.props.navigation.state.params
+    const dataRoom = await this.props.roomsData.rooms
+    const dataRoomFilter = dataRoom.filter(data=>{
+        return data.id == idRoom
+    })
+    this.setState({
+      room: dataRoomFilter[0].name
+    })
   }  
   
   render() {
@@ -42,7 +43,7 @@ import {connect} from 'react-redux'
           <View style={styles.form}>
             <Item rounded style={styles.formItem}>
               <Input
-                value={this.state.roomDetail}
+                value={this.state.room}
                 onChangeText={(text) => this.setState({ room: text })}
                 autoCapitalize='none'
                 keyboardType='email-address'
@@ -50,7 +51,7 @@ import {connect} from 'react-redux'
                />
             </Item>
             <TouchableOpacity style={{padding:20,backgroundColor:'#1B9CFC',borderRadius:30}} onPress={this.updateDataRoomHandler}>
-                <Text style={{alignSelf:'center',fontWeight:'bold', color:'white'}}>Login</Text>
+                <Text style={{alignSelf:'center',fontWeight:'bold', color:'white'}}>Update</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -95,8 +96,7 @@ const styles = StyleSheet.create({
   }
   const mapDispatchToProps = dispatch => {
     return {
-      updateDataRooms: (params) => dispatch(actionsRooms.updateRooms(params)),
-      getDataDetailRooms: (params) => dispatch(actionsRooms.detailRooms(params)),
+      updateDataRooms: (roomId,name) => dispatch(actionsRooms.updateRooms(roomId,name)),
       getDataRooms: (token) => dispatch(actionsRooms.getRooms(token))
     }
   }
