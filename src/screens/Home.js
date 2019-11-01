@@ -69,7 +69,6 @@ class Home extends Component {
           </Body>
         </Header>
         <View style={{backgroundColor:'blue'}}>
-          
         <Modal isVisible={this.state.modalVisible}>
             <View style={styles.modalInside}>
               <CheckOut 

@@ -12,12 +12,15 @@ import Setting from './src/screens/Setting'
 import AddCustomer from './src/screens/AddCustomer'
 import UpdateCustomer from './src/screens/updateCustomer'
 import UpdateRoom from './src/screens/UpdateRoom'
+import LandingScreen from './src/screens/LandingScreen'
+import FirstScreen from './src/screens/FirstScreen'
 
 import {createBottomTabNavigator} from 'react-navigation-tabs';
 
 const MainApp = createBottomTabNavigator(
     {
-      Room : {screen:Home},
+      FirstScreen:{screen:FirstScreen},
+    
       Checkin :{screen:Checkin} ,
       Customer: {screen:Customer},
       Setting : {screen:Setting}
@@ -25,14 +28,15 @@ const MainApp = createBottomTabNavigator(
     {
       defaultNavigationOptions: ({ navigation }) => ({
         tabBarIcon: ({ focused, horizontal, tintColor }) => {
-          const { routeName } = navigation.state;
-           if (routeName === 'Customer') {
+        const { routeName } = navigation.state;
+        if (routeName === 'Customer') {
             return (
               <Image
                 source={ require('./src/assets/icon/user.png') }
                 style={{ width: 20, height: 20, }} /> 
             );
           }
+          
         else if(routeName==='Checkin') {
             return (
               <Image
@@ -64,7 +68,12 @@ const MainApp = createBottomTabNavigator(
     }
   );
 const AppNavigator = createStackNavigator({
-   
+    LandingScreen:{
+      screen :LandingScreen,
+      navigationOptions : {
+      header:null
+      }
+    },
     Login : {
       screen :Login,
       navigationOptions : {
@@ -100,7 +109,8 @@ const AppNavigator = createStackNavigator({
       navigationOptions:{
         header:null
       }
-    }
+    },
+ 
 });
 
 export default createAppContainer(AppNavigator);

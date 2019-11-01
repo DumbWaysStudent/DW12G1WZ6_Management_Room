@@ -34,8 +34,7 @@ class Login extends Component {
     const data = this.props.authenticationLocal.user.token
     console.log(data)
     await AsyncStorage.setItem('user-token',data)
-    this.props.navigation.navigate('Home')
-    
+    this.props.navigation.navigate('FirstScreen')   
   }
 
   render() {
@@ -46,44 +45,32 @@ class Login extends Component {
         <View style={[styles.textInfo, styles.textInfoTop]}>
         <Image
           style={{width: 100, height: 100}}
-          source={require('./../assets/icon/hotel.jpg')}
+          source={require('./../assets/icon/hotel.png')}
         />
           <Text style={styles.subTitle}>Room Management</Text>
         </View>
-
         <View style={styles.form}>
-          <Item style={styles.formItem}>
+          <Item regular style={styles.formItem}>
+            <Icon name='mail' style={{marginLeft:10,color:'grey'}}></Icon>
             <Input
-              style={{marginLeft:10}}
               value={this.state.inputUsername}
               onChangeText={(text) => this.setState({ inputUsername: text })}
               autoCapitalize='none'
               keyboardType='email-address'
               placeholder='Input your email' />
           </Item>
-          <Item style={styles.formItem}>
+          <Item regular style={styles.formItem}>
+          <Icon name='key' style={{marginLeft:10,color:'grey'}}></Icon>
             <Input
-              style={{marginLeft:10}}
               value={this.state.inputPassword}
               onChangeText={(text) => this.setState({ inputPassword: text })}
               secureTextEntry={true}
               keyboardType='default'
               placeholder='Input your password' />
           </Item>
-          {/* <Button
-            title={"Let's Get Started"}
-            onHandleButton={() => this.authentication()} /> */}
           <TouchableOpacity style={{padding:20,backgroundColor:'#1B9CFC',borderRadius:10}} onPress={this.authentication}>
             <Text style={{alignSelf:'center',fontWeight:'bold', color:'white'}}>Let's Get Started</Text>
           </TouchableOpacity>
-        </View>
-
-        <View style={styles.textInfo}>
-          <Text> Don't have an account?
-            <Text
-              onPress={() => this.handleSignUp()}
-              style={styles.txtLink}> Sign Up </Text>
-          </Text>
         </View>
       </View>
     </SafeAreaView >
@@ -125,6 +112,7 @@ const styles = StyleSheet.create({
     marginTop: 10
   },
   formItem: {
+    borderRadius:5,
     marginBottom: 20
   },
   txtLink: {
