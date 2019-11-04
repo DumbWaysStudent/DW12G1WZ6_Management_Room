@@ -17,25 +17,25 @@ import {connect} from 'react-redux'
 
   updateDataRoomHandler= async()=>{
     
-    const roomId= this.props.navigation.state.params
+    const params= this.props.navigation.state.params
     const name= this.state.room
     
     const token = await AsyncStorage.getItem('user-token')
-    await this.props.updateDataRooms(roomId,name)
-    await this.props.getDataRooms(token)
+    await this.props.updateDataRooms(params.idRoom,name)
+    await this.props.getDataRooms(token,params.type)
+    console.log(this.props.roomsData)
     await this.props.navigation.navigate('Home')
   }
   componentDidMount = async() =>{
-    const idRoom = this.props.navigation.state.params
+    const params = this.props.navigation.state.params
     const dataRoom = await this.props.roomsData.rooms
     const dataRoomFilter = dataRoom.filter(data=>{
-        return data.id == idRoom
+        return data.id == params.idRoom
     })
     this.setState({
       room: dataRoomFilter[0].name
     })
   }  
-  
   render() {
     return (
         <SafeAreaView>
@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
   const mapDispatchToProps = dispatch => {
     return {
       updateDataRooms: (roomId,name) => dispatch(actionsRooms.updateRooms(roomId,name)),
-      getDataRooms: (token) => dispatch(actionsRooms.getRooms(token))
+      getDataRooms: (token,type) => dispatch(actionsRooms.getRooms(token,type))
     }
   }
   export default connect(

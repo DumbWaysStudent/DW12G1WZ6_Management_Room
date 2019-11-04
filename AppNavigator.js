@@ -74,6 +74,12 @@ const AppNavigator = createStackNavigator({
       header:null
       }
     },
+    MainApp:{
+      screen :MainApp,
+      navigationOptions : {
+      header:null
+      }
+    },
     Login : {
       screen :Login,
       navigationOptions : {
@@ -81,7 +87,7 @@ const AppNavigator = createStackNavigator({
       }
     },
     Home: { 
-      screen: MainApp,
+      screen: Home,
       navigationOptions : {
           header:null
       }

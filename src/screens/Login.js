@@ -34,7 +34,7 @@ class Login extends Component {
     const data = this.props.authenticationLocal.user.token
     console.log(data)
     await AsyncStorage.setItem('user-token',data)
-    this.props.navigation.navigate('FirstScreen')   
+    this.props.navigation.navigate('MainApp')   
   }
 
   render() {

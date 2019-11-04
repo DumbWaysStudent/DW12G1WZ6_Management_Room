@@ -59,12 +59,14 @@ app.group("/hotelky",(router) => {
     router.get('/customers/detail/:customerId',customerController.detail)
 
     // Rooms Api
-    router.get('/rooms',roomController.show)
+    router.get('/rooms/:type',roomController.show)
     router.post('/rooms/add',roomController.add)
     router.put('/rooms/checkin/:roomId',roomController.roomCheckIn)
     router.put('/rooms/checkout/:roomId',roomController.roomCheckOut)
     router.get('/rooms/detail/:roomId',roomController.detail)
     router.put('/rooms/update/:roomId',roomController.update)
+    router.get('/rooms/type/:type',roomController.roomType)
+    router.delete('/rooms/delete/:roomId',roomController.delete)
 
     // Orders API
     router.get('/orders',orderController.show)

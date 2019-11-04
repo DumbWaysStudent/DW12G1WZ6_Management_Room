@@ -4,14 +4,20 @@ const rooms = models.rooms
 const orders = models.orders
 
 exports.show = async(req,res) =>{
-    const result = await rooms.findAll()
+    const type = req.params.type
+    const result = await rooms.findAll({
+      where: {
+        type: type
+      }
+    })
     res.send(result)
 }
 exports.add = async(req,res) =>{
     const data = req.body
     const result = await rooms.create({
       name : data.name,
-      available : true
+      available : true,
+      type : data.type
     })
     res.send(result)
 }
@@ -29,6 +35,15 @@ exports.update = async(req,res) =>{
     }
   )
   res.send(result)
+}
+exports.delete = async(req,res) =>{
+  const roomId = req.params.roomId
+  const result = await rooms.destroy({
+    where: {
+      id: roomId
+    }
+  })
+  res.send(roomId)
 }
 exports.detail = async(req,res) =>{
   const roomId = req.params.roomId
@@ -63,6 +78,15 @@ exports.roomCheckIn = async(req,res) =>{
         id: roomId
       }
     })
+  res.send(result)
+}
+exports.roomType = async(req,res)=>{
+  const type = req.params.type
+  const result = await rooms.findAll({
+    where: {
+      type: type
+    }
+  })
   res.send(result)
 }
  

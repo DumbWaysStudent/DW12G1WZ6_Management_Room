@@ -1,18 +1,23 @@
 import * as types from './../types'
 import axios from 'axios'
 
-export const getRooms = (token) => ({
+export const getRooms = (token,type) => ({
     type : types.ROOMS,
-    payload : axios.get(`http://192.168.73.2:5000/hotelky/rooms`,{
+    payload : axios.get(`http://192.168.73.2:5000/hotelky/rooms/${type}`,{
         headers : {"Authorization" : `Bearer ${token}`}
     })
 })
 export const addRooms = (params) =>({
     type : types.ADDROOM,
     payload : axios.post(`http://192.168.73.2:5000/hotelky/rooms/add`,{
-        name : params,
+        name : params.nameRoom,
+        type : params.type,
         available : true
     })
+})
+export const deleteRooms = (params) =>({
+    type : types.ROOMSDELETE,
+    payload : axios.delete(`http://192.168.73.2:5000/hotelky/rooms/delete/${params}`)
 })
 export const checkInRoom = (params) =>({
     type: types.ROOMSCHECKIN,
@@ -35,4 +40,8 @@ export const updateRooms = (roomId,name) =>({
 export const detailRooms = (params) =>({
     types: types.ROOMSDETAIL,
     payload: axios.get(`http://192.168.73.2:5000/hotelky/rooms/detail/${params}`)
+})
+export const getRoomType = (params) =>({
+    types: types.ROOMTYPE,
+    payload: axios.get(`http://192.168.73.2:5000/hotelky/rooms/type/${params}`)
 })
