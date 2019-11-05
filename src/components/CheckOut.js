@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { View, Text,StyleSheet,SafeAreaView,Image,TouchableOpacity,Dimensions,AsyncStorage } from 'react-native';
-import { Item, Input,Label,Header,Body,Title} from 'native-base';
+import { Item, Input,Label,Header,Body,Title,Right,Icon} from 'native-base';
 import {connect} from 'react-redux';
 import * as actionsOrders from '../redux/actions/actionsOrders';
 import * as actionsRooms from '../redux/actions/actionsRooms';
@@ -16,25 +16,32 @@ class CheckOut extends Component {
   checkOut = async()=>{
     const token = await AsyncStorage.getItem('user-token');
     const params = {
-      idOrder : this.props.id.id,
-      idRoom : this.props.id.rooms.id
+      idOrder : this.props.dataOrder.id,
+      idRoom : this.props.dataOrder.rooms.id
     };
     await this.props.roomCheckOut(params);
     await this.props.orderCheckOut(params);
-    await this.props.getDataRooms(token);
+    await this.props.getDataRooms(token,this.props.typeRoom);
     this.props.closeModal()
+    
   }
   render() {
-    const dataOrder = this.props.id;
+    const dataOrder = this.props.dataOrder;
     return (
       <View>
-          
-        <View style={styles.modal}>
-      
-      <View style={styles.container}>
-        
-          <View style={styles.form}>
-            <Label>Customer Name</Label>
+          <View style={{backgroundColor:'#f0f6fb', height:'100%'}}>
+        <Header>
+          <Body>
+            <Title> Check Out</Title>
+          </Body>
+          <Right>
+              <Icon name='close' onPress={this.props.closeModal} style={{marginRight:10,color:'white'}}/>
+          </Right>
+        </Header>
+        <View style={{flex:1, justifyContent: "center",}}>
+         <View style={{borderRadius:10,backgroundColor:'white',height:'95%',width:'95%',alignSelf:'center', justifyContent: "center"}}>
+          <View style={{height:'95%',width:'95%',alignSelf:'center'}}>
+          <Label>Customer Name</Label>
           <Item regular style={styles.formItem}>
             <Input
               style={styles.input}
@@ -62,20 +69,20 @@ class CheckOut extends Component {
               keyboardType='default'
               placeholder='Input your password' />
           </Item>
+          <View style={{flexDirection:'row',width:'98%',alignSelf:"center"}}>
+               
+               <TouchableOpacity 
+               style={{width:'100%',justifyContent:'center',height:40,backgroundColor:'#1B9CFC',borderRadius:5}}
+               onPress={this.checkOut}
+               >
+                   <Text style={{alignSelf:'center',color:'white',fontWeight:'bold'}}>Submit</Text>
+               </TouchableOpacity>
+           </View>
+          </View>
+         </View>
         </View>
       </View>
-      <View style={{flexDirection:'row', justifyContent: 'center'}}>
-        <TouchableOpacity style={styles.buttonCheckout} onPress={this.checkOut}>
-          <Text>Check Out</Text>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.buttonCheckout} onPress={this.checkOut}>
-          <Text>Cancel</Text>
-        </TouchableOpacity>
-      </View>
-      
-      </View>
-      </View>
-      
+    </View>  
     );
   }
 }
@@ -135,7 +142,7 @@ const styles = StyleSheet.create({
   }
   const mapDispatchToProps = dispatch => {
     return {
-      getDataRooms: (token) => dispatch(actionsRooms.getRooms(token)),
+      getDataRooms: (token,type) => dispatch(actionsRooms.getRooms(token,type)),
       roomCheckOut: (params) => dispatch(actionsRooms.checkOutRoom(params)),
       orderCheckOut: (params) => dispatch(actionsOrders.checkOutOrder(params))
     }

@@ -13,18 +13,17 @@ import {Icon,Header,Body,Title,Left,Right,Fab,Button} from 'native-base';
 import * as actionsOrders from '../redux/actions/actionsOrders';
 import {connect} from 'react-redux';
 import {TouchableOpacity} from 'react-native-gesture-handler';
-import AddRoom from '../components/AddRoomComponent';
-import CheckOut from '../components/CheckOut';
 import ImageRoom from '../components/ImageRoom'
 import Modal from "react-native-modal";
+import CheckOut from '../components/CheckOut';
 import AddRoomComponent from '../components/AddRoomComponent';
 import UpdateRoomComponent from '../components/UpdateRoomComponent'
+import CheckInComponent from '../components/CheckInComponent'
 
 class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      roomDetail: [],
       modalVisible: false,
       orders: '',
       active: false,
@@ -41,7 +40,6 @@ class Home extends Component {
   };
 
   goAddRoom = async () => {
-    //this.props.navigation.navigate('AddRoom',type);
     await this.setState({
       modalVisible: true,
       modalAppear:'addRoom'
@@ -49,23 +47,26 @@ class Home extends Component {
     console.log(this.state.modalAppear)
   };
 
-  showRoom = async (visible, idRoom) => {
+  checkOut = async (idRoom) => {
     const token = await AsyncStorage.getItem('user-token');
     await this.props.getDataOrders(token, idRoom);
     const dataOrders = await this.props.ordersData.orders;
-    this.setState({
-      roomDetail: dataOrders.customers.name,
+    await this.setState({
       orders:dataOrders
     });
-
-    this.setState({modalVisible: visible, idRoom: idRoom});
+    await this.setState({modalVisible: true, idRoom: idRoom});
   };
 
   closeModal = () => {
     this.setState({modalVisible: false});
   };
-  checkIn = () => {
-    alert('checkin')
+  checkIn = async (roomId,roomName) => {
+    await this.setState({
+      idRoom: roomId,
+      nameRoom: roomName,
+      modalAppear:'checkIn',
+      modalVisible: true
+    })
   }
   editDelRoom = (idRoom,nameRoom) =>{
     this.setState({
@@ -74,10 +75,7 @@ class Home extends Component {
       idRoom: idRoom,
       modalVisible: true
     })
-    console.log(this.state)
   }
-
-
   render() {
     const dataType = this.props.navigation.state.params
     const dataRooms = this.props.roomsData.rooms;
@@ -111,15 +109,19 @@ class Home extends Component {
                     typeRoom = {dataType.type} 
                   />
                 :(this.state.modalAppear=='checkIn')?
-                  null
+                  <CheckInComponent
+                    typeRoom = {dataType.type}
+                    idRoom={this.state.idRoom}
+                    roomName={this.state.nameRoom}
+                    closeModal={()=>this.setState({modalVisible:false})}
+                  />
                 :// checkout 
-                  null
-              }
-             
-              {/* <CheckOut 
-              closeModal={()=>this.setState({modalVisible:false})}
-              id={this.state.orders}>
-              </CheckOut> */}
+                  <CheckOut 
+                    closeModal= {()=>this.setState({modalVisible:false})}
+                    dataOrder= {this.state.orders}
+                    typeRoom= {dataType.type}>
+                  </CheckOut>
+              } 
             </View>
           </Modal>
         
@@ -127,7 +129,6 @@ class Home extends Component {
          <ImageRoom 
          src={dataType.type} 
          style={styles.imageRoom}>
-           
          </ImageRoom>
          <View style={{flexDirection:'row',justifyContent:'space-between'}}>
            <View>
@@ -151,6 +152,7 @@ class Home extends Component {
           renderItem={({ item }) => 
             <TouchableOpacity
               onLongPress={!item.available?false:()=>this.editDelRoom(item.id,item.name)}
+              onPress={!item.available?()=>this.checkOut(item.id):()=>this.checkIn(item.id,item.name)}
               style={!item.available?styles.roomBooked:styles.roomAvailable}>
               <Text style={styles.nameRoomBooked}>{item.name}</Text>
               <Text style={styles.fontRoomBooked}>
@@ -214,7 +216,7 @@ const styles = StyleSheet.create({
     alignSelf:'center',
     backgroundColor:'white',
     width: Dimensions.get('window').width*0.95,
-    height: Dimensions.get('window').height*0.8,
+    height: Dimensions.get('window').height*0.7,
   },
   modalAddRoom: {
     borderRadius: 5,
