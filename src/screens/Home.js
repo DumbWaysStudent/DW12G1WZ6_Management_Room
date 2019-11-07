@@ -19,6 +19,7 @@ import CheckOut from '../components/CheckOut';
 import AddRoomComponent from '../components/AddRoomComponent';
 import UpdateRoomComponent from '../components/UpdateRoomComponent'
 import CheckInComponent from '../components/CheckInComponent'
+import moment from "moment";
 
 class Home extends Component {
   constructor(props) {
@@ -29,16 +30,68 @@ class Home extends Component {
       active: false,
       modalAppear:'',
       idRoom:'',
-      nameRoom:''
+      nameRoom:'',
+      interval:'',
+      data:[],
+      param:[],  
     };
   }
+
+  // UNSAFE_componentWillMount = async() =>{
+  //   const token = await AsyncStorage.getItem('user-token');
+  //   const params = await this.props.navigation.state.params
+  //   await this.props.getDataRooms(token,params.type);
+  //   await this.props.setState({
+  //     data: this.props.roomsData.rooms
+  //   })
+  // }
 
   componentDidMount = async () => {
     const token = await AsyncStorage.getItem('user-token');
     const params = await this.props.navigation.state.params
     await this.props.getDataRooms(token,params.type);
+    this.interval = setInterval(()=>{
+      this.autoCheckout()
+    },5000)
+    
+    //coba nanti dihapus
+    
   };
 
+  autoCheckout = async() =>{
+    // ini juga bakal dihapus
+    const token = await AsyncStorage.getItem('user-token');
+    const params = await this.props.navigation.state.params
+    await this.props.getDataRooms(token,params.type);
+    const data = this.props.roomsData.rooms
+    let paramsCheckout = null
+    //console.log(data[0].available)
+    if(data!=null){
+      for(let i = 0;i<data.length; i++){
+        if(data[i].available == false){
+          await this.props.getDataOrders(token,data[i].id)
+          let order = await this.props.ordersData.orders
+          console.log(order.order_end_time)
+          if(moment(order.order_end_time).diff(moment(),'s')<=0){
+            paramsCheckout = {
+              idRoom : data[i].id,
+              idOrder: order.id
+            }
+            
+            await this.props.orderCheckOut(paramsCheckout)
+            await this.props.roomCheckOut(paramsCheckout)
+            await this.props.getDataRooms(token,params.type)
+          }
+          
+        }
+      }
+    }
+    
+  }
+  
+  componentWillUnmount =()=>{
+    clearInterval(this.interval)
+  }
   goAddRoom = async () => {
     await this.setState({
       modalVisible: true,
@@ -48,11 +101,13 @@ class Home extends Component {
   };
 
   checkOut = async (idRoom) => {
+    
     const token = await AsyncStorage.getItem('user-token');
     await this.props.getDataOrders(token, idRoom);
     const dataOrders = await this.props.ordersData.orders;
     await this.setState({
-      orders:dataOrders
+      orders:dataOrders,
+      modalAppear:'checkOut'
     });
     await this.setState({modalVisible: true, idRoom: idRoom});
   };
@@ -77,6 +132,7 @@ class Home extends Component {
     })
   }
   render() {
+    
     const dataType = this.props.navigation.state.params
     const dataRooms = this.props.roomsData.rooms;
     const totalGuests = dataRooms.filter(data =>{
@@ -288,7 +344,9 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     getDataRooms: (token,type) => dispatch(actionsRooms.getRooms(token,type)),
-    getDataOrders: (token,idRoom) => dispatch(actionsOrders.getOrders(token,idRoom))
+    getDataOrders: (token,idRoom) => dispatch(actionsOrders.getOrders(token,idRoom)),
+    roomCheckOut: (params) => dispatch(actionsRooms.checkOutRoom(params)),
+    orderCheckOut: (params) => dispatch(actionsOrders.checkOutOrder(params))
   }
 }
 export default connect(

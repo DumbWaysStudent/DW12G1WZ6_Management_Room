@@ -54,7 +54,7 @@ app.group("/hotelky",(router) => {
 
     // Customers API
     router.get('/customers',customerController.show)
-    router.post('/customers/add',customerController.add)
+    router.post('/customers/add',upload.single('image'),customerController.add)
     router.put('/customers/edit/:customerId',customerController.edit)
     router.get('/customers/detail/:customerId',customerController.detail)
 

@@ -10,11 +10,7 @@ export const getCustomer = (token) => ({
 
 export const addCustomer = (params) =>({
     type : types.ADDCUSTOMER,
-    payload : axios.post(`http://192.168.73.2:5000/hotelky/customers/add`,{
-        name : params.name,
-        id_card : params.idCard,
-        phone_number : params.phoneNumber
-    })
+    payload : axios.post(`http://192.168.73.2:5000/hotelky/customers/add`,params)
 })
 
 export const detailCustomer = (params,token) =>({

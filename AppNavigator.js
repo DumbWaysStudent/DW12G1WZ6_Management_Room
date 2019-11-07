@@ -19,9 +19,9 @@ import {createBottomTabNavigator} from 'react-navigation-tabs';
 
 const MainApp = createBottomTabNavigator(
     {
-      FirstScreen:{screen:FirstScreen},
+      HomeScreen:{screen:FirstScreen},
     
-      Checkin :{screen:Checkin} ,
+  
       Customer: {screen:Customer},
       Setting : {screen:Setting}
     },
@@ -29,25 +29,17 @@ const MainApp = createBottomTabNavigator(
       defaultNavigationOptions: ({ navigation }) => ({
         tabBarIcon: ({ focused, horizontal, tintColor }) => {
         const { routeName } = navigation.state;
-        if (routeName === 'Customer') {
+        if (routeName === 'HomeScreen') {
             return (
               <Image
-                source={ require('./src/assets/icon/user.png') }
+                source={ require('./src/assets/icon/home.png') }
                 style={{ width: 20, height: 20, }} /> 
             );
           }
-          
-        else if(routeName==='Checkin') {
+        else if(routeName==='Customer') {
             return (
               <Image
-                source={ require('./src/assets/icon/favorites.png') }
-                style={{ width: 20, height: 20, }} /> 
-            );
-        }
-        else if(routeName==='Room') {
-            return (
-              <Image
-                source={ require('./src/assets/icon/menu.png') }
+                source={ require('./src/assets/icon/user.png') }
                 style={{ width: 20, height: 20, }} /> 
             );
           }

@@ -44,10 +44,10 @@ class Login extends Component {
 
         <View style={[styles.textInfo, styles.textInfoTop]}>
         <Image
-          style={{width: 100, height: 100}}
-          source={require('./../assets/icon/hotel.png')}
+          style={{width: 320, height: 200}}
+          source={require('./../assets/login.jpg')}
         />
-          <Text style={styles.subTitle}>Room Management</Text>
+          
         </View>
         <View style={styles.form}>
           <Item regular style={styles.formItem}>
@@ -100,7 +100,7 @@ const styles = StyleSheet.create({
     padding: 20
   },
   textInfoTop: {
-    marginTop: 40,
+    marginTop: 20,
     marginBottom: 30
   },
   title: {

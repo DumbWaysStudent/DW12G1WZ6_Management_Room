@@ -1,9 +1,11 @@
 import React, { Component } from 'react';
-import { View, Text,StyleSheet,Dimensions,Image,SafeAreaView,TouchableHighlight } from 'react-native';
+import { View, Text,StyleSheet,Dimensions,Image,SafeAreaView,TouchableHighlight,AsyncStorage } from 'react-native';
 import Carousel from 'react-native-snap-carousel';
 import {Icon,Header,Body,Title,Left,Right,Fab,Button} from 'native-base'
 import { TouchableOpacity } from 'react-native-gesture-handler';
-export default class FirstScreen extends Component {
+import * as actionsRooms from '../redux/actions/actionsRooms';
+import {connect} from 'react-redux';
+class FirstScreen extends Component {
   constructor(props) {
     super(props);
       this.state = {
@@ -20,8 +22,26 @@ export default class FirstScreen extends Component {
   goToRoomScreen = (item) =>{
    this.props.navigation.navigate('Home',item)
   }
-
+  componentDidMount = async() =>{
+    const token = await AsyncStorage.getItem('user-token');
+    this.state.rooms.map(async(item,index)=>{
+      await this.props.getDataRooms(token,item.type)
+      const dataRoom = await this.props.roomsData.rooms
+      const totalRoom = dataRoom.length
+      const totalRoomAvailable = dataRoom.filter(data =>{
+        return data.available==true
+      }).length
+      let prevState = this.state.rooms
+      prevState[index].total = totalRoom
+      prevState[index].available = totalRoomAvailable
+      this.setState({
+        rooms :prevState
+      })
+    })
+    console.log(this.state.rooms)
+  }
   render() {
+
     return (
     <View style={{flex:1,backgroundColor:'#f0f6fb'}}>
       <Header>
@@ -122,3 +142,19 @@ const styles = StyleSheet.create({
     fontWeight:'bold'
   },
 });
+const mapStateToProps = state => {
+  return {
+    roomsData : state.rooms, // reducers/index.js
+    ordersData : state.orders
+  }
+}
+const mapDispatchToProps = dispatch => {
+  return {
+    getDataRooms: (token,type) => dispatch(actionsRooms.getRooms(token,type)),
+    getDataOrders: (token,idRoom) => dispatch(actionsOrders.getOrders(token,idRoom))
+  }
+}
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(FirstScreen);

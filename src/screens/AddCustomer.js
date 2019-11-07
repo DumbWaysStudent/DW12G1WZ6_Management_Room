@@ -18,17 +18,24 @@ class AddCustomer extends Component {
         this.state = {
           name  : '',
           idCard : '',
-          phoneNumber : ''
+          phoneNumber : '',
+          imgCustomer:''
         };
       }
 
   addDataCustomerHandler= async()=>{
     const token = await AsyncStorage.getItem('user-token')
-    const params = {name:this.state.name,idCard:this.state.idCard,phoneNumber:this.state.phoneNumber} 
-    await this.props.addDataCustomers(params)
+    const formData = new FormData()
+    formData.append('name',this.state.name)
+    formData.append('id_card',this.state.idCard)
+    formData.append('phone_number',this.state.phoneNumber)
+    formData.append('image',this.state.imgCustomer)
+    await this.props.addDataCustomers(formData)
     await this.props.getDataCustomers(token)
     this.props.navigation.navigate('Customer')
   }  
+
+
 
   handleCamera=()=>{
     const options = {
@@ -55,7 +62,7 @@ class AddCustomer extends Component {
           };
           const source = response;
           this.setState({
-            cover: tmpPhoto,
+            imgCustomer: tmpPhoto,
           });
         }
       });
@@ -71,13 +78,16 @@ class AddCustomer extends Component {
         </Header>
         <View style={styles.container}>
           <View style={styles.form}>
-            <Image style={{height:120,width:120,alignSelf:'center',borderRadius:60,marginBottom:10}} source={require('../assets/room/suit.jpg')}/>
-            <TouchableOpacity style={{height:40,borderRadius:10,justifyContent:'center',marginBottom:10,width:150,backgroundColor:'#273c75',alignSelf:'center'}}>
+            <Image style={{height:120,width:120,alignSelf:'center',borderRadius:60,marginBottom:10}} 
+            source={{uri : this.state.imgCustomer.uri}}/>
+            <TouchableOpacity 
+            style={{height:40,borderRadius:10,justifyContent:'center',marginBottom:10,width:150,backgroundColor:'#273c75',alignSelf:'center'}}
+            onPress={this.handleCamera}
+            >
               <View style={{flexDirection:'row'}}>
-              <Icon name='camera' style={{color:'white',marginLeft: 10,}}/>
+              <Icon name='camera' style={{color:'white',marginLeft: 15,}}/>
               <Text style={{marginTop:4,marginLeft:10,color:'white',fontWeight:'bold'}}>Take Photo</Text>
               </View>
-              
             </TouchableOpacity>
             <Item regular style={styles.formItem}>
               <Input
@@ -110,7 +120,7 @@ class AddCustomer extends Component {
                
                 <TouchableOpacity 
                 style={{width:'100%',justifyContent:'center',height:50,backgroundColor:'#1B9CFC',borderRadius:5}}
-                onPress={this.addRoom}
+                onPress={this.addDataCustomerHandler}
                 >
                   <Text style={{alignSelf:'center',color:'white',fontWeight:'bold'}}>Add Customer</Text>
                 </TouchableOpacity>

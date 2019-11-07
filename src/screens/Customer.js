@@ -39,8 +39,8 @@ class Customer extends Component {
   
         <View style={{flexDirection: 'row'}}>
         <Image
-          style={{width: 50, height: 50,marginRight:10}}
-          source={require('./../assets/defaultUser.png')}
+          style={{width: 50, height: 50,marginRight:10,borderRadius:25}}
+          source={item.image==null?require('./../assets/defaultUser.png'):{uri:`http://192.168.73.2:5000/mangaky/${item.image}`}}
         />
           <View>
             <View style={{flexDirection: 'row'}}>

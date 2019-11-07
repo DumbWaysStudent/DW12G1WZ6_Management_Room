@@ -25,7 +25,9 @@ class CheckInComponent extends Component {
   checkIn = async() =>{
     const dateNow = new Date()
     let dateCheckOut = new Date(dateNow)
-    dateCheckOut.setMinutes(dateNow.getMinutes()+this.state.durationCheckin)
+    dateCheckOut.setMinutes(dateNow.getMinutes()+Number(this.state.durationCheckin))
+    console.log(dateNow)
+    console.log(dateCheckOut)
     const params = {
       customerId: this.state.selectedValue,
       roomId: this.props.idRoom,

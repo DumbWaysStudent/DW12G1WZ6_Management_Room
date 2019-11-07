@@ -11,7 +11,13 @@ exports.detail = async(req,res) =>{
     res.send(result)
 }
 exports.add = async(req,res) =>{
-    const result = await customers.create(req.body)
+    const {name,id_card,phone_number} = req.body
+    const result = await customers.create({
+        name,
+        id_card,
+        phone_number,
+        image: req.file.path
+    })
     res.send(result)
 }
 exports.edit = async(req,res) =>{
